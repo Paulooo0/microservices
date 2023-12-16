@@ -3,6 +3,7 @@ package br.com.pauloh.clientservice.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/client")
+@RefreshScope
 public class ClientController {
 
     @Autowired
@@ -30,18 +32,18 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable("id") String id,@RequestBody Client client) {
         clientService.updateClient(id, client);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Client> findById(@PathVariable String id) {
         return ResponseEntity.ok(clientService.findById(id));
     }
 
-    @GetMapping("/{cpf}")
+    @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Client> findByCpf(@PathVariable String cpf) {
         return ResponseEntity.ok(clientService.findByCpf(cpf));
     }
@@ -51,7 +53,7 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getAllClients());
     }
     
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Client> deleteById(@PathVariable String id) {
         clientService.deleteById(id);
         return ResponseEntity.ok().build();

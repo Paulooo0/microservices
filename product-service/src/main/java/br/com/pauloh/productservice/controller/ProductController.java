@@ -3,6 +3,7 @@ package br.com.pauloh.productservice.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/product")
+@RefreshScope
 public class ProductController {
     
     @Autowired
@@ -35,13 +37,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") String id, @RequestBody Product product) {
         productService.updateClient(id, product);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable("id") String id) {
         productService.deleteById(id);
         return ResponseEntity.ok().build();
@@ -52,12 +54,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllProducts());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Product> findById(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Product> findByName(@PathVariable("name") String name) {
         return ResponseEntity.ok(productService.findByName(name));
     }

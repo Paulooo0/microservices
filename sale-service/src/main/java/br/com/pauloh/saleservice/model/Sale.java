@@ -1,38 +1,50 @@
 package br.com.pauloh.saleservice.model;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Document("sale")
+@Entity
+@Table(name = "tb_sales")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "Sale")
 public class Sale {
     
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Id")
-    private String id;
+    private Long id;
 
     @NotNull
-    @Schema(nullable = false, description = "Cpf")
-    private String cpf;
+    @Schema(nullable = false, description = "Sale code")
+    private String saleCode;
+
+    @NotNull
+    @Schema(nullable = false, description = "Client CPF")
+    private String clientCpf;
 
     @NotNull
     @Schema(nullable = false, description = "Products")
-    private List<HashMap<String, Integer>> products;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<SaleProducts> saleProductsList;
 
     @NotNull
-    @Schema(nullable = false, description = "Total")
-    private Double total;
-
-    @NotNull
-    @Schema(description = "Created at", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Created at")
     private Instant createdAt = Instant.now();
 }
