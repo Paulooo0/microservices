@@ -6,6 +6,7 @@ Microservices project, simulating a sale system
 - [The Project](#the-project)
 - [Features](#features)
 - [Technologies](#technologies)
+- [Examples](#examples)
 
 ## The Project
 
