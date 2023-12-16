@@ -1,6 +1,7 @@
 package br.com.pauloh.saleservice.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,7 +21,7 @@ public class SaleService {
     private final SaleRepository saleRepository;
     private final WebClient webClient;
 
-    public void placeSale(SaleRequest saleRequest) {
+    public Sale placeSale(SaleRequest saleRequest) {
         Sale sale = new Sale();
 
         String getClient = webClient.get()
@@ -38,11 +39,12 @@ public class SaleService {
             .map(this::mapToDto)
             .toList();
 
+        sale.setSaleCode(UUID.randomUUID().toString());
         sale.setClientCpf(saleRequest.getClientCpf());
         sale.setSaleProductsList(saleProducts);
         sale.setStatus(SaleStatus.OPEN);
         
-        saleRepository.save(sale);
+        return saleRepository.save(sale);
     }
 
     private SaleProducts mapToDto(SaleProductsDto saleProductsDto) {
@@ -55,13 +57,34 @@ public class SaleService {
             .block();
 
         if (getProduct.isEmpty()) {
-            throw new RuntimeException("Client does not exist");
+            throw new RuntimeException("Product does not exist");
         }
 
         saleProducts.setName(saleProductsDto.getName());
         saleProducts.setPrice(saleProductsDto.getPrice());
         saleProducts.setQuantity(saleProductsDto.getQuantity());
         return saleProducts;
+    }
+
+    public Sale findById(String saleCode) {
+        return saleRepository.findBySaleCode(saleCode).orElseThrow(() -> new RuntimeException(
+            String.format("Sale with code %s not found", saleCode)));
+    }
+
+    public Sale finishSale(String saleCode) {
+        Sale savedSale = saleRepository.findBySaleCode(saleCode).orElseThrow(() -> new RuntimeException(
+        String.format("Sale with code %s not found", saleCode)));
+
+        savedSale.setStatus(SaleStatus.FINISHED);
+        return saleRepository.save(savedSale);
+    }
+
+    public Sale cancelSale(String saleCode) {
+        Sale savedSale = saleRepository.findBySaleCode(saleCode).orElseThrow(() -> new RuntimeException(
+        String.format("Sale with code %s not found", saleCode)));
+
+        savedSale.setStatus(SaleStatus.CANCELED);
+        return saleRepository.save(savedSale);
     }
 
     public List<Sale> getAllSales() {

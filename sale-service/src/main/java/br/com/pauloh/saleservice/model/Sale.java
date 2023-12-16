@@ -31,6 +31,10 @@ public class Sale {
     private Long id;
 
     @NotNull
+    @Schema(nullable = false, description = "Sale code")
+    private String saleCode;
+
+    @NotNull
     @Schema(nullable = false, description = "Client CPF")
     private String clientCpf;
 

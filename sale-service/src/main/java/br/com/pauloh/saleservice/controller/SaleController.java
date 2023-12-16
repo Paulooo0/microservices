@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,9 +28,8 @@ public class SaleController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeSale(@RequestBody SaleRequest sale) {
-        saleService.placeSale(sale);
-        return "Sale placed successfully";
+    public Sale placeSale(@RequestBody SaleRequest sale) {
+        return saleService.placeSale(sale);
     }
 
     @GetMapping("/all")
@@ -36,10 +37,21 @@ public class SaleController {
         return saleService.getAllSales();
     }
 
-    // @PostMapping
-    // public ResponseEntity<Sale> createSale(@RequestBody Sale sale) {
-    //     saleService.createSale(sale);
-    //     return ResponseEntity.status(HttpStatus.CREATED).build();
-    // }
+    @GetMapping("/id/{saleCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public Sale findById(@PathVariable String saleCode) {
+        return saleService.findById(saleCode);
+    }
 
+    @PutMapping("/cancel/{saleCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public Sale cancelSale(@PathVariable String saleCode) {
+        return saleService.cancelSale(saleCode);
+    }
+
+    @PutMapping("/finish/{saleCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public Sale finishSale(@PathVariable String saleCode) {
+        return saleService.finishSale(saleCode);
+    }
 }
