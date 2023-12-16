@@ -2,11 +2,10 @@ package br.com.pauloh.saleservice.model;
 
 import java.time.Instant;
 import java.util.List;
+
+import br.com.pauloh.saleservice.view.SaleStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tb_sales")
+@Table(name = "tb_sale")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,10 +31,6 @@ public class Sale {
     private Long id;
 
     @NotNull
-    @Schema(nullable = false, description = "Sale code")
-    private String saleCode;
-
-    @NotNull
     @Schema(nullable = false, description = "Client CPF")
     private String clientCpf;
 
@@ -43,6 +38,10 @@ public class Sale {
     @Schema(nullable = false, description = "Products")
     @OneToMany(cascade = CascadeType.ALL)
     private List<SaleProducts> saleProductsList;
+
+    @NotNull
+    @Schema(description = "Status")
+    private SaleStatus status;
 
     @NotNull
     @Schema(description = "Created at")
